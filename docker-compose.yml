@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  rasa_app:
+    build:
+      context: ./rasa_app
+      dockerfile: Dockerfile
+    container_name: rasa_app
+    ports:
+      - "5002:5002"
+      - "5055:5055"
+      - "5005:5005"
+    networks:
+      - app_network
+    restart: always
+
+  web_app:
+    build:
+      context: ./web_app
+      dockerfile: Dockerfile
+    container_name: web_app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - rasa_app
+    networks:
+      - app_network
+    restart: always
+
+networks:
+  app_network:
+    driver: bridge
